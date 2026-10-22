@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Smart Travel Bag</title>
+
+  <!-- Map -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <style>
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f4f7;
+      text-align: center;
+      margin: 0;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    h1 {
+      font-size: 38px;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      margin: 15px 0;
+      border-radius: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+    }
+
+    .card p {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      background: #222;
+      color: white;
+      margin-top: 10px;
+    }
+
+    .back {
+      background: #777;
+      margin-bottom: 20px;
+    }
+
+    /* =========================
+       WEIGHT
+    ========================= */
+
+    .warning {
+      background: #fff3cd;
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .bag-animation {
+      width: 200px;
+      height: 250px;
+      margin: 20px auto;
+      position: relative;
+      animation: suitcaseMove 2s ease-in-out infinite;
+    }
+
+    .handle {
+      width: 45px;
+      height: 65px;
+      border: 7px solid #555;
+      border-bottom: none;
+      border-radius: 12px 12px 0 0;
+      position: absolute;
+      top: 0;
+      left: 78px;
+      box-sizing: border-box;
+    }
+
+    .suitcase {
+      width: 135px;
+      height: 155px;
+      background: #f58ab5;
+      border: 4px solid #d95f91;
+      border-radius: 18px;
+      position: absolute;
+      bottom: 40px;
+      left: 33px;
+      box-sizing: border-box;
+    }
+
+    .suitcase::after {
+      content: "";
+      position: absolute;
+      width: 4px;
+      height: 100%;
+      background: #d95f91;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+    }
+
+    .wheel {
+      width: 22px;
+      height: 22px;
+      background: #333;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 18px;
+    }
+
+    .wheel-left {
+      left: 48px;
+    }
+
+    .wheel-right {
+      right: 48px;
+    }
+
+    .weight-platform {
+      width: 210px;
+      height: 18px;
+      background: #777;
+      border-radius: 8px;
+      margin: 20px auto 0;
+    }
+
+    @keyframes suitcaseMove {
+
+      0%, 100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-8px);
+      }
+
+    }
+
+    /* =========================
+       HISTORY
+    ========================= */
+
+    .history {
+      text-align: left;
+    }
+
+    .history-item {
+      background: #f2f4f7;
+      padding: 12px;
+      border-radius: 10px;
+      margin: 8px 0;
+    }
+
+    /* =========================
+       GPS MAP
+    ========================= */
+
+    #map {
+      width: 100%;
+      height: 350px;
+      border-radius: 15px;
+      margin-top: 15px;
+    }
+
+    .gps-status {
+      font-size: 16px !important;
+      font-weight: normal !important;
+    }
+
+    /* =========================
+       BLUETOOTH
+    ========================= */
+
+    .bluetooth-status {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .device-name {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    /* =========================
+       TEMPERATURE
+    ========================= */
+
+    .temperature {
+      font-size: 35px;
+      font-weight: bold;
+    }
+
+    .recommended {
+      font-size: 18px !important;
+      font-weight: normal !important;
+    }
+
+    .alert {
+      background: #ffdddd;
+      color: #b00000;
+      padding: 15px;
+      border-radius: 12px;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     MAIN PAGE
+========================= -->
+
+<div class="container" id="mainPage">
+
+  <h1>🎒 Smart Travel Bag</h1>
+
+  <p class="subtitle">
+    Smart Bag Monitoring System
+  </p>
+
+
+  <!-- WEIGHT -->
+
+  <div class="card" onclick="openPage('weightPage')">
+
+    <h2>⚖️ Weight</h2>
+
+    <p id="mainWeight">
+      0.0 kg
+    </p>
+
+  </div>
+
+
+  <!-- GPS -->
+
+  <div class="card" onclick="openGPS()">
+
+    <h2>📍 GPS Location</h2>
+
+    <p id="mainGPS">
+      Tap to view location
+    </p>
+
+  </div>
+
+
+  <!-- BLUETOOTH -->
+
+  <div class="card" onclick="connectBluetooth()">
+
+    <h2>📱 Bluetooth</h2>
+
+    <p id="mainBluetooth">
+      Disconnected ❌
+    </p>
+
+  </div>
+
+
+  <!-- TEMPERATURE -->
+
+  <div class="card" onclick="openPage('temperaturePage')">
+
+    <h2>🌡️ Temperature</h2>
+
+    <p id="mainTemperature">
+      -- °C
+    </p>
+
+  </div>
+
+</div>
+
+
+
+<!-- =========================
+     WEIGHT PAGE
+========================= -->
+
+<div class="container hidden" id="weightPage">
+
+  <button class="back" onclick="goHome()">
+    ← Back
+  </button>
+
+  <h1>⚖️ Weight</h1>
+
+  <p class="subtitle">
+    Smart Bag Weight Measurement
+  </p>
+
+
+  <div class="card">
+
+    <h2>
+      Current Weight
+    </h2>
+
+    <p id="currentWeight">
+      -- kg
+    </p>
+
+
+    <button onclick="measureWeight(event)">
+      Measure Weight ⚖️
+    </button>
+
+
+    <div id="weightInstructions" class="hidden">
+
+      <div class="warning">
+        Place the bag like this.
+      </div>
+
+
+      <!-- Pink animated suitcase -->
+
+      <div class="bag-animation">
+
+        <div class="handle"></div>
+
+        <div class="suitcase"></div>
+
+        <div class="wheel wheel-left"></div>
+
+        <div class="wheel wheel-right"></div>
+
+      </div>
+
+
+      <div class="weight-platform"></div>
+
+    </div>
+
+  </div>
+
+
+  <!-- PREVIOUS WEIGHTS -->
+
+  <div class="card history">
+
+    <h2>
+      📊 Previous Weights
+    </h2>
+
+    <div id="weightHistory">
+
+      <div class="history-item">
+        No previous measurements
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- =========================
+     GPS PAGE
+========================= -->
+
+<div class="container hidden" id="gpsPage">
+
+  <button class="back" onclick="goHome()">
+    ← Back
+  </button>
+
+  <h1>
+    📍 GPS Location
+  </h1>
+
+
+  <div class="card">
+
+    <h2>
+      Bag Location
+    </h2>
+
+    <div id="map"></div>
+
+    <p class="gps-status" id="gpsStatus">
+      Getting location...
+    </p>
+
+  </div>
+
+</div>
+
+
+
+<!-- =========================
+     BLUETOOTH PAGE
+========================= -->
+
+<div class="container hidden" id="bluetoothPage">
+
+  <button class="back" onclick="goHome()">
+    ← Back
+  </button>
+
+  <h1>
+    📱 Bluetooth
+  </h1>
+
+
+  <div class="card">
+
+    <h2>
+      Device
+    </h2>
+
+    <p>
+      Device Name:
+    </p>
+
+    <p class="device-name" id="deviceName">
+      Not connected
+    </p>
+
+    <p class="bluetooth-status" id="bluetoothStatus">
+      Disconnected ❌
+    </p>
+
+  </div>
+
+</div>
+
+
+
+<!-- =========================
+     TEMPERATURE PAGE
+========================= -->
+
+<div class="container hidden" id="temperaturePage">
+
+  <button class="back" onclick="goHome()">
+    ← Back
+  </button>
+
+
+  <h1>
+    🌡️ Temperature
+  </h1>
+
+
+  <div class="card">
+
+    <h2>
+      Current Temperature
+    </h2>
+
+
+    <p class="temperature" id="temperature">
+      -- °C
+    </p>
+
+
+    <h3>
+      Recommended Temperature
+    </h3>
+
+
+    <p class="recommended">
+      15°C – 30°C
+    </p>
+
+
+    <div id="temperatureAlert" class="hidden">
+
+      <div class="alert">
+
+        ⚠️ Temperature Alert
+
+        <br>
+
+        The temperature is too high!
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- Leaflet Map -->
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+<script>
+
+
+/* =========================
+   PAGE NAVIGATION
+========================= */
+
+function openPage(pageId) {
+
+  document
+    .querySelectorAll(".container")
+    .forEach(function(page) {
+
+      page.classList.add("hidden");
+
+    });
+
+
+  document
+    .getElementById(pageId)
+    .classList
+    .remove("hidden");
+
+}
+
+
+
+/* =========================
+   HOME
+========================= */
+
+function goHome() {
+
+  document
+    .querySelectorAll(".container")
+    .forEach(function(page) {
+
+      page.classList.add("hidden");
+
+    });
+
+
+  document
+    .getElementById("mainPage")
+    .classList
+    .remove("hidden");
+
+}
+
+
+
+/* =========================
+   WEIGHT
+========================= */
+
+function measureWeight(event) {
+
+  event.stopPropagation();
+
+
+  document
+    .getElementById("weightInstructions")
+    .classList
+    .remove("hidden");
+
+}
+
+
+
+/* =========================
+   GPS
+========================= */
+
+let map;
+let marker;
+
+
+function openGPS() {
+
+  openPage("gpsPage");
+
+
+  setTimeout(function() {
+
+    if (!map) {
+
+      map = L.map("map").setView(
+        [29.3759, 47.9774],
+        11
+      );
+
+
+      L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+          maxZoom: 19,
+          attribution: "&copy; OpenStreetMap contributors"
+        }
+      ).addTo(map);
+
+    }
+
+
+    map.invalidateSize();
+
+
+    if (navigator.geolocation) {
+
+      navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+          const lat =
+            position.coords.latitude;
+
+          const lng =
+            position.coords.longitude;
+
+
+          map.setView(
+            [lat, lng],
+            16
+          );
+
+
+          if (marker) {
+            marker.remove();
+          }
+
+
+          marker = L.marker(
+            [lat, lng]
+          ).addTo(map);
+
+
+          marker.bindPopup(
+            "🎒 Smart Bag Location"
+          ).openPopup();
+
+
+          document
+            .getElementById("gpsStatus")
+            .innerText =
+            "Location found 📍";
+
+
+          document
+            .getElementById("mainGPS")
+            .innerText =
+            "Location available 📍";
+
+        },
+
+        function() {
+
+          document
+            .getElementById("gpsStatus")
+            .innerText =
+            "Unable to get location.";
+
+        }
+
+      );
+
+    } else {
+
+      document
+        .getElementById("gpsStatus")
+        .innerText =
+        "GPS is not supported.";
+
+    }
+
+  }, 200);
+
+}
+
+
+
+/* =========================
+   BLUETOOTH
+========================= */
+
+async function connectBluetooth() {
+
+  if (!navigator.bluetooth) {
+
+    alert(
+      "Bluetooth is not supported in this browser."
+    );
+
+    return;
+
+  }
+
+
+  openPage("bluetoothPage");
+
+
+  try {
+
+    document
+      .getElementById("bluetoothStatus")
+      .innerText =
+      "Searching... 🔎";
+
+
+    const device =
+      await navigator.bluetooth.requestDevice({
+
+        acceptAllDevices: true
+
+      });
+
+
+    document
+      .getElementById("deviceName")
+      .innerText =
+      device.name || "Smart Bag";
+
+
+    document
+      .getElementById("bluetoothStatus")
+      .innerText =
+      "Connected ✅";
+
+
+    document
+      .getElementById("mainBluetooth")
+      .innerText =
+      "Connected ✅";
+
+
+  } catch (error) {
+
+    document
+      .getElementById("bluetoothStatus")
+      .innerText =
+      "Disconnected ❌";
+
+  }
+
+}
+
+
+
+/* =========================
+   DEMO TEMPERATURE
+========================= */
+
+function showTemperature(temperature) {
+
+  document
+    .getElementById("temperature")
+    .innerText =
+    temperature + " °C";
+
+
+  document
+    .getElementById("mainTemperature")
+    .innerText =
+    temperature + " °C";
+
+
+  if (temperature > 30) {
+
+    document
+      .getElementById("temperatureAlert")
+      .classList
+      .remove("hidden");
+
+  } else {
+
+    document
+      .getElementById("temperatureAlert")
+      .classList
+      .add("hidden");
+
+  }
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
