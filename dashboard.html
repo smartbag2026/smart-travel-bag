@@ -16,226 +16,244 @@
   <style>
 
     body {
-      font-family: Arial, sans-serif;
-      background: #f2f4f7;
-      text-align: center;
-      margin: 0;
-      padding: 30px;
-    }
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #fff0f6, #fce0eb, #f8d1e1);
+  color: #74334f;
+  text-align: center;
+  margin: 0;
+  padding: 25px 16px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
 
-    .container {
-      max-width: 600px;
-      margin: auto;
-    }
+.container {
+  max-width: 600px;
+  width: 100%;
+  margin: auto;
+}
 
-    h1 {
-      font-size: 38px;
-      margin-bottom: 5px;
-    }
+h1 {
+  font-size: 34px;
+  margin-bottom: 8px;
+  color: #a63868;
+}
 
-    .subtitle {
-      color: #666;
-      margin-bottom: 30px;
-    }
+.subtitle {
+  color: #99647b;
+  margin-bottom: 30px;
+}
 
-    .card {
-      background: white;
-      padding: 22px;
-      margin: 15px 0;
-      border-radius: 18px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      cursor: pointer;
-      transition: 0.2s;
-    }
+.card {
+  background: rgba(255, 255, 255, 0.88);
+  padding: 22px;
+  margin: 16px 0;
+  border: 1px solid #f5c3d7;
+  border-radius: 22px;
+  box-shadow: 0 7px 20px rgba(177, 79, 122, 0.12);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
 
-    .card:hover {
-      transform: scale(1.02);
-    }
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(177, 79, 122, 0.18);
+}
 
-    .card p {
-      font-size: 20px;
-      font-weight: bold;
-    }
+.card h2 {
+  color: #a63868;
+}
 
-    .hidden {
-      display: none;
-    }
+.card p {
+  font-size: 20px;
+  font-weight: bold;
+}
 
-    button {
-      padding: 12px 20px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 16px;
-      background: #222;
-      color: white;
-      margin-top: 10px;
-    }
+.hidden {
+  display: none !important;
+}
 
-    .back {
-      background: #777;
-      margin-bottom: 20px;
-    }
+button {
+  padding: 13px 22px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  background: #c34e7d;
+  color: white;
+  margin-top: 10px;
+  box-shadow: 0 4px 10px rgba(195, 78, 125, 0.18);
+}
 
-    /* =========================
-       WEIGHT
-    ========================= */
+button:hover {
+  background: #a63868;
+}
 
-    .warning {
-      background: #fff3cd;
-      padding: 15px;
-      border-radius: 12px;
-      margin-top: 20px;
-      font-weight: bold;
-    }
+.back {
+  background: #d987aa;
+  margin-bottom: 20px;
+}
 
-    .bag-animation {
-      width: 200px;
-      height: 250px;
-      margin: 20px auto;
-      position: relative;
-      animation: suitcaseMove 2s ease-in-out infinite;
-    }
+.warning {
+  background: #fff0f5;
+  color: #a63868;
+  border: 1px solid #f0b4cd;
+  padding: 15px;
+  border-radius: 14px;
+  margin-top: 20px;
+  font-weight: bold;
+}
 
-    .handle {
-      width: 45px;
-      height: 65px;
-      border: 7px solid #555;
-      border-bottom: none;
-      border-radius: 12px 12px 0 0;
-      position: absolute;
-      top: 0;
-      left: 78px;
-      box-sizing: border-box;
-    }
+.bag-animation {
+  width: 200px;
+  height: 250px;
+  margin: 20px auto;
+  position: relative;
+  animation: suitcaseMove 2s ease-in-out infinite;
+}
 
-    .suitcase {
-      width: 135px;
-      height: 155px;
-      background: #f58ab5;
-      border: 4px solid #d95f91;
-      border-radius: 18px;
-      position: absolute;
-      bottom: 40px;
-      left: 33px;
-      box-sizing: border-box;
-    }
+.handle {
+  width: 45px;
+  height: 65px;
+  border: 7px solid #b95a80;
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+  position: absolute;
+  top: 0;
+  left: 78px;
+  box-sizing: border-box;
+}
 
-    .suitcase::after {
-      content: "";
-      position: absolute;
-      width: 4px;
-      height: 100%;
-      background: #d95f91;
-      left: 50%;
-      top: 0;
-      transform: translateX(-50%);
-    }
+.suitcase {
+  width: 135px;
+  height: 155px;
+  background: #f4a1c1;
+  border: 4px solid #d45d8e;
+  border-radius: 18px;
+  position: absolute;
+  bottom: 40px;
+  left: 33px;
+  box-sizing: border-box;
+}
 
-    .wheel {
-      width: 22px;
-      height: 22px;
-      background: #333;
-      border-radius: 50%;
-      position: absolute;
-      bottom: 18px;
-    }
+.suitcase::after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 100%;
+  background: #d45d8e;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
 
-    .wheel-left {
-      left: 48px;
-    }
+.wheel {
+  width: 22px;
+  height: 22px;
+  background: #a64b70;
+  border: 2px solid #fff0f5;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 18px;
+}
 
-    .wheel-right {
-      right: 48px;
-    }
+.wheel-left {
+  left: 48px;
+}
 
-    .weight-platform {
-      width: 210px;
-      height: 18px;
-      background: #777;
-      border-radius: 8px;
-      margin: 20px auto 0;
-    }
+.wheel-right {
+  right: 48px;
+}
 
-    @keyframes suitcaseMove {
+.weight-platform {
+  width: 210px;
+  height: 18px;
+  background: #d987aa;
+  border-radius: 8px;
+  margin: 20px auto 0;
+}
 
-      0%, 100% {
-        transform: translateY(0);
-      }
+@keyframes suitcaseMove {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
 
-      50% {
-        transform: translateY(-8px);
-      }
+.history {
+  text-align: left;
+}
 
-    }
+.history-item {
+  background: #fff0f6;
+  border: 1px solid #f5c3d7;
+  color: #74334f;
+  padding: 12px;
+  border-radius: 12px;
+  margin: 8px 0;
+}
 
-    /* =========================
-       HISTORY
-    ========================= */
+#map {
+  width: 100%;
+  height: 350px;
+  border-radius: 15px;
+  margin-top: 15px;
+}
 
-    .history {
-      text-align: left;
-    }
+.gps-status {
+  font-size: 16px !important;
+  font-weight: normal !important;
+}
 
-    .history-item {
-      background: #f2f4f7;
-      padding: 12px;
-      border-radius: 10px;
-      margin: 8px 0;
-    }
+.bluetooth-status {
+  font-size: 20px;
+  font-weight: bold;
+  color: #a63868;
+}
 
-    /* =========================
-       GPS MAP
-    ========================= */
+.device-name {
+  font-size: 22px;
+  font-weight: bold;
+  overflow-wrap: anywhere;
+}
 
-    #map {
-      width: 100%;
-      height: 350px;
-      border-radius: 15px;
-      margin-top: 15px;
-    }
+.temperature {
+  font-size: 35px;
+  font-weight: bold;
+  color: #c34e7d;
+}
 
-    .gps-status {
-      font-size: 16px !important;
-      font-weight: normal !important;
-    }
+.recommended {
+  font-size: 18px !important;
+  font-weight: normal !important;
+  color: #74334f;
+}
 
-    /* =========================
-       BLUETOOTH
-    ========================= */
+.alert {
+  background: #ffe4ed;
+  color: #a12e57;
+  border: 1px solid #f0a8c2;
+  padding: 15px;
+  border-radius: 14px;
+  font-weight: bold;
+  margin-top: 15px;
+}
 
-    .bluetooth-status {
-      font-size: 20px;
-      font-weight: bold;
-    }
+@media (max-width: 480px) {
+  body {
+    padding: 20px 12px;
+  }
 
-    .device-name {
-      font-size: 22px;
-      font-weight: bold;
-    }
+  h1 {
+    font-size: 29px;
+  }
 
-    /* =========================
-       TEMPERATURE
-    ========================= */
-
-    .temperature {
-      font-size: 35px;
-      font-weight: bold;
-    }
-
-    .recommended {
-      font-size: 18px !important;
-      font-weight: normal !important;
-    }
-
-    .alert {
-      background: #ffdddd;
-      color: #b00000;
-      padding: 15px;
-      border-radius: 12px;
-      font-weight: bold;
-      margin-top: 15px;
-    }
+  .card {
+    padding: 18px;
+  }
+}
 
   </style>
 </head>
